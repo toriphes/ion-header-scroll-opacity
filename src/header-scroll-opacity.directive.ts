@@ -88,7 +88,6 @@ export class IonHeaderScrollOpacityDirective {
         this.isTransparent ? 0 : 1
       );
       origDidEnter.apply(toolbar);
-      origDidEnter = null;
     };
   }
 
