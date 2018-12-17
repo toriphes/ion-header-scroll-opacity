@@ -4,8 +4,8 @@ import {
   Input,
   Renderer2,
   ContentChild
-} from '@angular/core';
-import { Content, Navbar, Toolbar } from 'ionic-angular';
+} from "@angular/core";
+import { Content, Navbar, Toolbar } from "ionic-angular";
 
 /**
  * @description
@@ -26,23 +26,23 @@ import { Content, Navbar, Toolbar } from 'ionic-angular';
  * ```
  */
 @Directive({
-  selector: '[header-scroll-opacity]'
+  selector: "[header-scroll-opacity]"
 })
 export class IonHeaderScrollOpacityDirective {
   /**
    * Reference to ion-content component
    */
-  @Input('scrollArea') scrollArea: Content;
+  @Input("scrollArea") scrollArea: Content;
 
   /**
    * Amount of pixel to be scrolled in order end the opacity transition
    */
-  @Input('scrollAmount') scrollAmount: number = 88;
+  @Input("scrollAmount") scrollAmount: number = 88;
 
   /**
    * If true the header background starts with opacity=0
    */
-  @Input('isTransparent') isTransparent: boolean = true;
+  @Input("isTransparent") isTransparent: boolean = true;
 
   /**
    * ion-navbar reference
@@ -59,7 +59,7 @@ export class IonHeaderScrollOpacityDirective {
    */
   toolbarEl: HTMLElement;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) {}
 
   ngAfterContentInit() {
     // ion-header may contains a ion-navbar or ion-toolbar component
@@ -67,7 +67,7 @@ export class IonHeaderScrollOpacityDirective {
 
     if (!toolbar) {
       throw new Error(
-        'Neither toolbar or navbar found for header-scoll-opacity directive'
+        "Neither toolbar or navbar found for header-scoll-opacity directive"
       );
     }
 
@@ -80,14 +80,15 @@ export class IonHeaderScrollOpacityDirective {
       .firstChild as HTMLElement;
 
     // initial toolbar-background opacity wont set without this hack
-    let origDidEnter = toolbar.constructor.prototype.didEnter;
-    toolbar.constructor.prototype.didEnter = () => {
+    let origDidEnter = (toolbar as any).didEnter;
+    (toolbar as any).didEnter = () => {
       this.renderer.setStyle(
         this.toolbarEl,
-        'opacity',
+        "opacity",
         this.isTransparent ? 0 : 1
       );
       origDidEnter.apply(toolbar);
+      (toolbar as any).didEnter = origDidEnter;
     };
   }
 
@@ -105,6 +106,6 @@ export class IonHeaderScrollOpacityDirective {
       amount = 0;
     }
 
-    this.renderer.setStyle(this.toolbarEl, 'opacity', amount);
+    this.renderer.setStyle(this.toolbarEl, "opacity", amount);
   }
 }
