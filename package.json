@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "ion-header-scroll-opacity",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Change header background opacity on content scroll",
   "main": "./src/index.ts",
   "scripts": {
