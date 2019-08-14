@@ -4,6 +4,8 @@
 
 # ion-header-scroll-opacity
 
+Now compatible with Ionic 4 🎉.
+
 Change header background opacity on content scroll.
 
 ## install
@@ -12,25 +14,21 @@ Change header background opacity on content scroll.
 npm i ion-header-scroll-opacity --save
 ```
 
+If you are using Ionic 3 install `ion-header-scroll-opacity@^1.0.0` and use to the [ion-header-scroll-opacit#ionic-3 ](https://github.com/toriphes/ion-header-scroll-opacity/tree/ionic-3) branch for reference.
+
 ## Import directive
 
-Import the `IonHeaderScrollOpacityModule` into the your `app.module.ts`.
+Import the `IonHeaderScrollOpacityModule` into the your page module
 
 ```typescript
-import { IonHeaderScrollOpacityModule } from 'ion-header-scroll-opacity';
+import { IonHeaderScrollOpacityModule } from "ion-header-scroll-opacity";
 
 @NgModule({
-  declarations: [MyApp, IonHeaderScrollOpacityModule, HomePage],
-  imports: [BrowserModule, IonicModule.forRoot(MyApp), HttpModule],
-  bootstrap: [IonicApp],
-  entryComponents: [MyApp, HomePage],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
-  ]
+  [...]
+  imports: [IonHeaderScrollOpacityModule],
+  [...]
 })
-export class AppModule {}
+export class HomePageModule {}
 ```
 
 ## Usage
@@ -41,23 +39,25 @@ Put the `header-scroll-opacity` directive on the ion-header element.
 
 | Input         | Description                                                        | Default value |
 | ------------- | ------------------------------------------------------------------ | ------------- |
-| scrollArea    | `ion-content` reference                                            | _none_        |
+| ionContentRef | `ion-content` reference                                            | _none_        |
 | scrollAmount  | Amount of pixel to be scrolled in order end the opacity transition | 88            |
 | isTransparent | If true the header background starts with opacity=0                | true          |
 
 ```html
-<ion-header header-scroll-opacity [scrollArea]="mycontent">
-  <ion-navbar color="primary">
+<ion-header scrollOpacity [ionContentRef]="mycontent">
+  <ion-toolbar color="primary">
     <ion-title>
       Do scroll
     </ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content no-padding #mycontent fullscreen>
+<ion-content #mycontent [scrollEvents]="true">
   ...long scrolling content...
 </ion-content>
 ```
+
+**Remember** to set `[scrollEvents]="true"` on the ion-content component otherwise the directive will not work.
 
 ### Tip
 
@@ -71,7 +71,7 @@ Add the `fullscreen` attribute to the `ion-content` element and add some css sty
 
 ## Demo
 
-![Demo](./ion-header-scroll-opacity.gif 'Demo')
+![Demo](./ion-header-scroll-opacity.gif "Demo")
 
 ## Contribute
 
