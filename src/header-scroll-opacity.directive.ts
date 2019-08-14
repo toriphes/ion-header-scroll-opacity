@@ -1,11 +1,13 @@
 import {
   Directive,
-  ElementRef,
   Input,
   Renderer2,
-  ContentChild
-} from "@angular/core";
-import { Content, Navbar, Toolbar } from "ionic-angular";
+  ContentChild,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+import { IonContent, IonToolbar } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 /**
  * @description
@@ -15,81 +17,95 @@ import { Content, Navbar, Toolbar } from "ionic-angular";
  * ## Usage
  *
  * ```html
- * <ion-header header-scroll-opacity [scrollArea]="mycontent">
- *   <ion-navbar color="primary">
+ * <ion-header scrollOpacity [ionContentRef]="mycontent">
+ *   <ion-toolbar color="primary">
  *     <ion-title>Scroll</ion-title>
- *   </ion-navbar>
+ *   </ion-toolbar>
  * </ion-header>
  *
- * <ion-content [scrollArea]="mycontent">
+ * <ion-content #mycontent [scrollEvents]="true">
  * </ion-content>
  * ```
  */
 @Directive({
-  selector: "[header-scroll-opacity]"
+  selector: 'ion-header[scrollOpacity]'
 })
-export class IonHeaderScrollOpacityDirective {
+export class IonHeaderScrollOpacityDirective implements OnInit, OnDestroy {
   /**
    * Reference to ion-content component
    */
-  @Input("scrollArea") scrollArea: Content;
+  @Input() ionContentRef: IonContent;
 
   /**
    * Amount of pixel to be scrolled in order end the opacity transition
    */
-  @Input("scrollAmount") scrollAmount: number = 88;
+  @Input() scrollAmount = 88;
 
   /**
    * If true the header background starts with opacity=0
    */
-  @Input("isTransparent") isTransparent: boolean = true;
-
-  /**
-   * ion-navbar reference
-   */
-  @ContentChild(Navbar) navbar: Navbar;
+  @Input() isTransparent = true;
 
   /**
    * ion-toolbar reference
    */
-  @ContentChild(Toolbar) toolbar: Toolbar;
+  // @ts-ignore
+  @ContentChild(IonToolbar, { static: true }) toolbar: IonToolbar;
 
   /**
    * Toolbar background html element
    */
   toolbarEl: HTMLElement;
 
+  /**
+   * Element where the scrolling takes place
+   */
+  scrollArea: HTMLElement;
+
+  /**
+   * Scroll subscription ref. When the target component is destroyed we should unsubscribe to avoid memory leak
+   */
+  private scrollSbuscription: Subscription;
+
   constructor(private renderer: Renderer2) {}
 
-  ngAfterContentInit() {
-    // ion-header may contains a ion-navbar or ion-toolbar component
-    const toolbar = this.navbar || this.toolbar;
-
-    if (!toolbar) {
+  async ngOnInit() {
+    if (!this.toolbar) {
       throw new Error(
-        "Neither toolbar or navbar found for header-scoll-opacity directive"
+        'IonToolbar component not found for scrollOpacity directive'
       );
     }
 
+    // get the real scroll element
+    this.scrollArea = await this.ionContentRef.getScrollElement();
+
     // listen for ion-content scroll event
-    this.scrollArea.ionScroll.subscribe(() => {
+    this.scrollSbuscription = this.ionContentRef.ionScroll.subscribe(() => {
       this.changeOpacity();
     });
 
-    this.toolbarEl = (toolbar.getElementRef().nativeElement as HTMLElement)
-      .firstChild as HTMLElement;
+    this.toolbarEl = (this.toolbar as any).el as HTMLElement;
 
-    // initial toolbar-background opacity wont set without this hack
-    let origDidEnter = (toolbar as any).didEnter;
-    (toolbar as any).didEnter = () => {
+    // @ts-ignore
+    // toolbarEl is a stenciljs web component
+    this.toolbarEl.componentOnReady().then(() => {
       this.renderer.setStyle(
-        this.toolbarEl,
-        "opacity",
+        this.toolbarBackgroundEl,
+        'opacity',
         this.isTransparent ? 0 : 1
       );
-      origDidEnter.apply(toolbar);
-      (toolbar as any).didEnter = origDidEnter;
-    };
+    });
+  }
+
+  ngOnDestroy() {
+    this.scrollSbuscription.unsubscribe();
+  }
+
+  /**
+   * Extract the toolbar-background element from the toolbar shadow dom
+   */
+  get toolbarBackgroundEl() {
+    return this.toolbarEl.shadowRoot.children[0];
   }
 
   changeOpacity() {
@@ -106,6 +122,6 @@ export class IonHeaderScrollOpacityDirective {
       amount = 0;
     }
 
-    this.renderer.setStyle(this.toolbarEl, "opacity", amount);
+    this.renderer.setStyle(this.toolbarBackgroundEl, 'opacity', amount);
   }
 }

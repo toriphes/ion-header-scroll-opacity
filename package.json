@@ -3,11 +3,12 @@
   "name": "ion-header-scroll-opacity",
   "version": "1.1.0",
   "description": "Change header background opacity on content scroll",
+  "main": "./src/index.ts",
   "scripts": {
     "build": "ng-packagr -p package.json",
     "test": "echo \"Error: no test specified\" && exit 1",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "shipit": "npm run build && npm publish"
+    "shipit": "npm run build && npm publish --prefix ./dist"
   },
   "repository": {
     "type": "git",
@@ -29,28 +30,34 @@
   },
   "homepage": "https://github.com/toriphes/ion-header-scroll-opacity#readme",
   "devDependencies": {
-    "@angular/common": "5.2.11",
-    "@angular/compiler": "5.2.11",
-    "@angular/compiler-cli": "5.2.11",
-    "@angular/core": "5.2.11",
-    "@angular/forms": "5.2.11",
-    "@angular/http": "5.2.11",
-    "@angular/platform-browser": "5.2.11",
-    "@angular/platform-browser-dynamic": "5.2.11",
+    "@angular/common": "~8.1.2",
+    "@angular/compiler": "~8.1.2",
+    "@angular/compiler-cli": "~8.1.2",
+    "@angular/core": "~8.1.2",
+    "@angular/router": "~8.1.2",
+    "@angular/forms": "~8.1.2",
+    "@angular/platform-browser": "~8.1.2",
+    "@angular/platform-browser-dynamic": "~8.1.2",
+    "@angular-devkit/schematics": "~8.1.2",
     "conventional-changelog-cli": "^2.0.3",
-    "ionic-angular": "3.9.5",
+    "@ionic/angular": "^4.0.0",
     "ionicons": "3.0.0",
-    "ng-packagr": "^3.0.1",
-    "rxjs": "5.5.11",
-    "typescript": "2.6.2",
-    "zone.js": "0.8.29"
+    "ng-packagr": "^5.0.0",
+    "rxjs": "~6.5.1",
+    "typescript": "~3.4.3",
+    "zone.js": "~0.9.1",
+    "tslint": "~5.15.0"
   },
   "peerDependencies": {
-    "ionic-angular": "^3.9.2"
+    "@ionic/angular": "^4.0.0"
   },
+  "sideEffects": false,
   "ngPackage": {
     "lib": {
-      "entryFile": "src/index.ts"
+      "entryFile": "src/index.ts",
+      "umdModuleIds": {
+        "@ionic/angular": "@ionic/angular"
+      }
     }
   }
 }
