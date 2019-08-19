@@ -76,6 +76,12 @@ export class IonHeaderScrollOpacityDirective implements OnInit, OnDestroy {
       );
     }
 
+    if (!(this.ionContentRef instanceof IonContent)) {
+      throw new Error(
+        '@input ionContentRef shoud be a valid instance of IonContent'
+      );
+    }
+
     // get the real scroll element
     this.scrollArea = await this.ionContentRef.getScrollElement();
 
@@ -98,7 +104,9 @@ export class IonHeaderScrollOpacityDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.scrollSbuscription.unsubscribe();
+    if (this.scrollSbuscription) {
+      this.scrollSbuscription.unsubscribe();
+    }
   }
 
   /**
