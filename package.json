@@ -58,7 +58,7 @@
     "protractor": "~5.4.0",
     "conventional-changelog-cli": "^2.0.3",
     "ionicons": "3.0.0",
-    "ng-packagr": "^5.0.0",
+    "ng-packagr": "^10.1.1",
     "rxjs": "~6.5.1",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3",
