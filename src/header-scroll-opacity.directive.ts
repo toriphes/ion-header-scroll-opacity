@@ -113,7 +113,7 @@ export class IonHeaderScrollOpacityDirective implements OnInit, OnDestroy {
    * Extract the toolbar-background element from the toolbar shadow dom
    */
   get toolbarBackgroundEl() {
-    return this.toolbarEl.shadowRoot.children[0];
+    return this.toolbarEl.shadowRoot.querySelector('.toolbar-background');
   }
 
   changeOpacity() {
