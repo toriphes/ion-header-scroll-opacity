@@ -33,7 +33,7 @@
   "homepage": "https://github.com/toriphes/ion-header-scroll-opacity#readme",
   "devDependencies": {
     "@angular-devkit/build-ng-packagr": "~0.802.2",
-    "@angular-devkit/build-angular": "~0.802.2",
+    "@angular-devkit/build-angular": "~15.0.0",
     "@angular-devkit/schematics": "~8.1.2",
     "@angular/cli": "~8.1.2",
     "@angular/common": "~8.1.2",
